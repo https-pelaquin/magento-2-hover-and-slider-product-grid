@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Bruno Pelaquin. All rights reserved.
+ * https://github.com/https-pelaquin
+ * https://www.linkedin.com/in/bruno-pelaquin/
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="bp_hover_image_product_grids" translate="label" showInDefault="1" showInWebsite="1"
+                 showInStore="1" sortOrder="90">
+            <label>Hover Image Product Grids</label>
+            <tab>pelaquin</tab>
+            <resource>Pelaquin_HoverImageProductGrids::config</resource>
+            <group id="general" showInDefault="1" showInWebsite="1" showInStore="1" translate="label"
+                   sortOrder="10">
+                <label>General</label>
+                <field id="active" canRestore="1" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="10"
+                       translate="label" type="select">
+                    <label>Enable Hover Image Product Grids Module</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Enable or disable hover and slider images in product grids.</comment>
+                </field>
+
+                <field id="slider_option" canRestore="1" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="20"
+                       translate="label" type="select">
+                    <label>Use Slider Instead of Hover</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Use the product images selected for the grid slider instead of the hover image.</comment>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

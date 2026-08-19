@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Bruno Pelaquin. All rights reserved.
+ * https://github.com/https-pelaquin
+ * https://www.linkedin.com/in/bruno-pelaquin/
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <bp_hover_image_product_grids>
+            <general>
+                <active>1</active>
+                <slider_option>0</slider_option>
+            </general>
+        </bp_hover_image_product_grids>
+    </default>
+</config>
