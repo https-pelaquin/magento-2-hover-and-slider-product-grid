@@ -13,12 +13,13 @@
 $width = (int)$block->getWidth();
 $height = (int)$block->getHeight();
 $paddingBottom = $block->getRatio() * 100;
+$productId = (int)$block->getProductId();
 $hoverImageUrl = (string)$block->getData('hover_image_url');
 $primaryImageClass = trim((string)$block->getClass() . ' bp-product-image-primary');
 $hoverImageClass = trim((string)$block->getClass() . ' bp-product-image-hover');
 ?>
 
-<span class="product-image-container product-image-container-<?= /* @noEscape */ $block->getProductId() ?>">
+<span class="product-image-container product-image-container-<?= /* @noEscape */ $productId ?>">
     <span class="product-image-wrapper bp-product-hover-image">
         <img class="<?= $escaper->escapeHtmlAttr($primaryImageClass) ?>"
             <?php foreach ($block->getCustomAttributes() as $name => $value): ?>
@@ -40,17 +41,17 @@ $hoverImageClass = trim((string)$block->getClass() . ' bp-product-image-hover');
 </span>
 <?php
 $styles = <<<STYLE
-.product-image-container-{$block->getProductId()} {
+.product-image-container-{$productId} {
     width: {$width}px;
     height: auto;
     aspect-ratio: {$width} / {$height};
 }
-.product-image-container-{$block->getProductId()} span.product-image-wrapper {
+.product-image-container-{$productId} span.product-image-wrapper {
     height: 100%;
     width: 100%;
 }
 @supports not (aspect-ratio: auto) {
-    .product-image-container-{$block->getProductId()} span.product-image-wrapper {
+    .product-image-container-{$productId} span.product-image-wrapper {
         padding-bottom: {$paddingBottom}%;
     }
 }

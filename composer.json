@@ -1,0 +1,52 @@
+{
+    "name": "pelaquin/module-hover-image-product-grids",
+    "description": "Accessible hover images and lazy product-image sliders for native Magento product grids.",
+    "type": "magento2-module",
+    "license": "MIT",
+    "keywords": [
+        "magento2",
+        "product-grid",
+        "hover-image",
+        "product-slider",
+        "page-builder"
+    ],
+    "homepage": "https://github.com/https-pelaquin/magento-2-hover-and-slider-product-grid",
+    "authors": [
+        {
+            "name": "Bruno Pelaquin",
+            "homepage": "https://github.com/https-pelaquin",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/https-pelaquin/magento-2-hover-and-slider-product-grid/issues",
+        "source": "https://github.com/https-pelaquin/magento-2-hover-and-slider-product-grid"
+    },
+    "require": {
+        "php": "~8.3.0 || ~8.4.0 || ~8.5.0",
+        "magento/framework": "103.0.*",
+        "magento/module-backend": "102.0.*",
+        "magento/module-catalog": "104.0.*",
+        "magento/module-config": "101.2.*",
+        "magento/module-eav": "102.1.*",
+        "magento/module-page-builder": "2.2.*",
+        "magento/module-store": "101.1.*",
+        "magento/module-ui": "101.2.*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^12.0"
+    },
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Pelaquin\\HoverImageProductGrids\\": ""
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Pelaquin\\HoverImageProductGrids\\Test\\": "Test/"
+        }
+    }
+}

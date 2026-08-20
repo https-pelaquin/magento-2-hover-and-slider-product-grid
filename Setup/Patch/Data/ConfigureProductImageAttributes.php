@@ -1,8 +1,9 @@
 <?php
 /**
- * Copyright © Bruno Pelaquin. All rights reserved.
- * https://github.com/https-pelaquin
- * https://www.linkedin.com/in/bruno-pelaquin/
+ *  Copyright © Bruno Pelaquin. All rights reserved.
+ *
+ *  https://github.com/https-pelaquin
+ *  https://www.linkedin.com/in/bruno-pelaquin/
  */
 
 declare(strict_types=1);
@@ -10,14 +11,13 @@ declare(strict_types=1);
 namespace Pelaquin\HoverImageProductGrids\Setup\Patch\Data;
 
 use Magento\Catalog\Model\Product;
-use Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface;
 use Magento\Eav\Setup\EavSetupFactory;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 use Magento\Framework\Setup\Patch\DataPatchInterface;
 use Pelaquin\HoverImageProductGrids\Model\Product\Attribute\Backend\SliderImages as SliderImagesBackend;
 use Pelaquin\HoverImageProductGrids\Model\SliderImages;
 
-class SliderImagesAttribute implements DataPatchInterface
+class ConfigureProductImageAttributes implements DataPatchInterface
 {
     public function __construct(
         private readonly ModuleDataSetupInterface $moduleDataSetup,
@@ -31,23 +31,16 @@ class SliderImagesAttribute implements DataPatchInterface
 
         try {
             $eavSetup = $this->eavSetupFactory->create(['setup' => $this->moduleDataSetup]);
-            $attribute = $eavSetup->getAttribute(Product::ENTITY, SliderImages::ATTRIBUTE_CODE);
+            if ($eavSetup->getAttribute(Product::ENTITY, 'hover_catalog')) {
+                $eavSetup->updateAttribute(Product::ENTITY, 'hover_catalog', 'frontend_label', 'Hover Image');
+            }
 
-            if (!$attribute) {
-                $eavSetup->addAttribute(
+            if ($eavSetup->getAttribute(Product::ENTITY, SliderImages::ATTRIBUTE_CODE)) {
+                $eavSetup->updateAttribute(
                     Product::ENTITY,
                     SliderImages::ATTRIBUTE_CODE,
-                    [
-                        'type' => 'text',
-                        'label' => 'Product Grid Slider Images',
-                        'input' => 'text',
-                        'backend' => SliderImagesBackend::class,
-                        'required' => false,
-                        'global' => ScopedAttributeInterface::SCOPE_STORE,
-                        'visible' => false,
-                        'user_defined' => false,
-                        'used_in_product_listing' => true
-                    ]
+                    'backend_model',
+                    SliderImagesBackend::class
                 );
             }
         } finally {
@@ -64,6 +57,9 @@ class SliderImagesAttribute implements DataPatchInterface
 
     public static function getDependencies(): array
     {
-        return [];
+        return [
+            HoverAttribute::class,
+            SliderImagesAttribute::class
+        ];
     }
 }

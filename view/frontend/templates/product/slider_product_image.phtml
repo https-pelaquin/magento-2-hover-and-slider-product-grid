@@ -12,12 +12,14 @@
 $width = (int)$block->getWidth();
 $height = (int)$block->getHeight();
 $paddingBottom = $block->getRatio() * 100;
+$productId = (int)$block->getProductId();
 $sliderImageUrls = (array)$block->getData('slider_image_urls');
 $sliderImageUrls = array_values(array_unique([(string)$block->getImageUrl(), ...$sliderImageUrls]));
 ?>
 
-<span class="product-image-container product-image-container-<?= /* @noEscape */ $block->getProductId() ?>">
+<span class="product-image-container product-image-container-<?= /* @noEscape */ $productId ?>">
     <span class="product-image-wrapper bp-product-slider-image"
+          aria-label="<?= $escaper->escapeHtmlAttr(__('Product image gallery')) ?>"
           data-mage-init='{"Pelaquin_HoverImageProductGrids/js/product-slider": {}}'>
         <?php foreach ($sliderImageUrls as $index => $imageUrl): ?>
             <img class="<?= $escaper->escapeHtmlAttr($block->getClass()) ?>"
@@ -26,7 +28,11 @@ $sliderImageUrls = array_values(array_unique([(string)$block->getImageUrl(), ...
                         <?= $escaper->escapeHtmlAttr($name) ?>="<?= $escaper->escapeHtmlAttr($value) ?>"
                     <?php endforeach; ?>
                 <?php endif; ?>
-                src="<?= $escaper->escapeUrl($imageUrl) ?>"
+                <?php if ($index === 0): ?>
+                    src="<?= $escaper->escapeUrl($imageUrl) ?>"
+                <?php else: ?>
+                    data-lazy="<?= $escaper->escapeUrl($imageUrl) ?>"
+                <?php endif; ?>
                 loading="lazy"
                 width="<?= $escaper->escapeHtmlAttr($block->getWidth()) ?>"
                 height="<?= $escaper->escapeHtmlAttr($block->getHeight()) ?>"
@@ -39,17 +45,17 @@ $sliderImageUrls = array_values(array_unique([(string)$block->getImageUrl(), ...
 </span>
 <?php
 $styles = <<<STYLE
-.product-image-container-{$block->getProductId()} {
+.product-image-container-{$productId} {
     width: {$width}px;
     height: auto;
     aspect-ratio: {$width} / {$height};
 }
-.product-image-container-{$block->getProductId()} span.product-image-wrapper {
+.product-image-container-{$productId} span.product-image-wrapper {
     height: 100%;
     width: 100%;
 }
 @supports not (aspect-ratio: auto) {
-    .product-image-container-{$block->getProductId()} span.product-image-wrapper {
+    .product-image-container-{$productId} span.product-image-wrapper {
         padding-bottom: {$paddingBottom}%;
     }
 }

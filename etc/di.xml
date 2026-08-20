@@ -10,8 +10,7 @@
         xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
 
     <type name="Magento\Catalog\Block\Product\ImageFactory">
-        <plugin name="category_image_template_switch"
-                type="Pelaquin\HoverImageProductGrids\Plugin\ImageTemplateSwitcher" />
+        <plugin name="pelaquin_hover_image_product_grids_image_template"
+                type="Pelaquin\HoverImageProductGrids\Plugin\ImageTemplateSwitcher"/>
     </type>
-
 </config>

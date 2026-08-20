@@ -13,13 +13,13 @@ use InvalidArgumentException;
 use Magento\Catalog\Block\Adminhtml\Product\Helper\Form\Gallery;
 use Magento\Catalog\Block\Adminhtml\Product\Helper\Form\Gallery\Content;
 use Magento\Catalog\Model\Product;
-use Magento\Framework\Serialize\SerializerInterface;
+use Magento\Framework\Serialize\Serializer\Json;
 use Pelaquin\HoverImageProductGrids\Model\SliderImages;
 
 class GalleryImagesData
 {
     public function __construct(
-        private readonly SerializerInterface $serializer,
+        private readonly Json $serializer,
         private readonly SliderImages $sliderImages
     ) {
     }
@@ -50,12 +50,16 @@ class GalleryImagesData
         $canUseDefault = (int)$product->getStoreId() !== 0;
         $useDefault = $canUseDefault && !$product->getExistsStoreValueFlag(SliderImages::ATTRIBUTE_CODE);
 
-        foreach ($images as &$image) {
+        foreach ($images as $key => $image) {
+            if (!is_array($image)) {
+                continue;
+            }
+
             $image['slider_selected'] = in_array($image['file'] ?? '', $selectedImages, true);
             $image['slider_can_use_default'] = $canUseDefault;
             $image['slider_use_default'] = $useDefault;
+            $images[$key] = $image;
         }
-        unset($image);
 
         return $this->serializer->serialize($images);
     }

@@ -33,25 +33,28 @@ class HoverAttribute implements DataPatchInterface
     {
         $setup = $this->moduleDataSetup;
         $setup->startSetup();
-        $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
-        $checkAttribute = $eavSetup->getAttribute(Product::ENTITY, 'hover_catalog');
-        if (!$checkAttribute) {
-            $eavSetup->addAttribute(
-                Product::ENTITY,
-                'hover_catalog',
-                [
-                    'type' => 'varchar',
-                    'label' => 'Hover',
-                    'input' => 'media_image',
-                    'frontend' => Image::class,
-                    'required' => false,
-                    'global' => ScopedAttributeInterface::SCOPE_STORE,
-                    'used_in_product_listing' => true
-                ]
-            );
-        }
 
-        $setup->endSetup();
+        try {
+            $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
+            $checkAttribute = $eavSetup->getAttribute(Product::ENTITY, 'hover_catalog');
+            if (!$checkAttribute) {
+                $eavSetup->addAttribute(
+                    Product::ENTITY,
+                    'hover_catalog',
+                    [
+                        'type' => 'varchar',
+                        'label' => 'Hover Image',
+                        'input' => 'media_image',
+                        'frontend' => Image::class,
+                        'required' => false,
+                        'global' => ScopedAttributeInterface::SCOPE_STORE,
+                        'used_in_product_listing' => true
+                    ]
+                );
+            }
+        } finally {
+            $setup->endSetup();
+        }
 
         return $this;
     }

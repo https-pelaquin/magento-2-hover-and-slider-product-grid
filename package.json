@@ -1,0 +1,12 @@
+{
+    "name": "pelaquin-hover-image-product-grids-tests",
+    "version": "1.0.0",
+    "private": true,
+    "description": "JavaScript regression tests for the Pelaquin Hover Image Product Grids Magento module.",
+    "scripts": {
+        "test": "node --test Test/Unit/Js/*.test.cjs"
+    },
+    "engines": {
+        "node": ">=18"
+    }
+}

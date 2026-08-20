@@ -19,6 +19,11 @@ define([
                 this._syncSliderImages();
             },
 
+            _destroy: function () {
+                this.$dialog.off('.bpSliderImages').off('.bpSliderImagesDefault');
+                this._super();
+            },
+
             _showDialog: function (imageData) {
                 this._super(imageData);
                 this._addSliderField(imageData);
@@ -41,20 +46,32 @@ define([
 
                 this.sliderCanUseDefault = Boolean(firstImage.slider_can_use_default);
                 this.sliderUseDefault = Boolean(firstImage.slider_use_default);
-                this.sliderImagesInput = $('<input>', {
-                    type: 'hidden',
-                    name: 'product[slider_images]',
-                    'data-form-part': formName
-                }).appendTo(this.element);
-                this.sliderUseDefaultInput = $('<input>', {
-                    type: 'hidden',
-                    name: 'use_default[slider_images]',
-                    value: this.sliderUseDefault ? '1' : '0',
-                    'data-form-part': formName
-                }).appendTo(this.element);
+                this.sliderImagesInput = this.element.find('[data-role=bp-slider-images-input]');
+
+                if (!this.sliderImagesInput.length) {
+                    this.sliderImagesInput = $('<input>', {
+                        type: 'hidden',
+                        name: 'product[slider_images]',
+                        'data-form-part': formName,
+                        'data-role': 'bp-slider-images-input'
+                    }).appendTo(this.element);
+                }
+
+                this.sliderUseDefaultInput = this.element.find('[data-role=bp-slider-images-use-default-input]');
+                if (this.sliderCanUseDefault && !this.sliderUseDefaultInput.length) {
+                    this.sliderUseDefaultInput = $('<input>', {
+                        type: 'hidden',
+                        name: 'use_default[slider_images]',
+                        value: this.sliderUseDefault ? '1' : '0',
+                        'data-form-part': formName,
+                        'data-role': 'bp-slider-images-use-default-input'
+                    }).appendTo(this.element);
+                }
             },
 
             _bindSliderEvents: function () {
+                this.$dialog.off('.bpSliderImages').off('.bpSliderImagesDefault');
+
                 this.$dialog.on(
                     'change.bpSliderImages',
                     '[data-role=slider-image-selector]',
@@ -72,7 +89,9 @@ define([
                     '[data-role=slider-images-use-default]',
                     function (event) {
                         this.sliderUseDefault = $(event.currentTarget).is(':checked');
-                        this.sliderUseDefaultInput.val(this.sliderUseDefault ? '1' : '0');
+                        if (this.sliderUseDefaultInput.length) {
+                            this.sliderUseDefaultInput.val(this.sliderUseDefault ? '1' : '0');
+                        }
                         this.$dialog.find('[data-role=slider-image-selector]').prop('disabled', this.sliderUseDefault);
                         this._contentUpdated();
                     }.bind(this)
@@ -153,6 +172,10 @@ define([
                         imageData = imageContainer.data('imageData'),
                         roleLabels = imageContainer.find('[data-role=roles-labels]'),
                         roleLabel = roleLabels.find('[data-role=slider-role-label]');
+
+                    if (!imageData) {
+                        return;
+                    }
 
                     if (!roleLabel.length) {
                         roleLabel = $('<li>', {

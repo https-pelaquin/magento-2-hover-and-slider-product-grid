@@ -13,7 +13,7 @@ use Magento\Catalog\Block\Product\Image as ImageBlock;
 use Magento\Catalog\Block\Product\ImageFactory;
 use Magento\Catalog\Helper\ImageFactory as ImageHelperFactory;
 use Magento\Catalog\Model\Product;
-use Pelaquin\HoverImageProductGrids\Helper\Data as Helper;
+use Pelaquin\HoverImageProductGrids\Model\Config;
 use Pelaquin\HoverImageProductGrids\Model\SliderImages;
 
 class ImageTemplateSwitcher
@@ -29,26 +29,20 @@ class ImageTemplateSwitcher
     ];
 
     public function __construct(
-        private readonly Helper $helper,
+        private readonly Config $config,
         private readonly ImageHelperFactory $imageHelperFactory,
         private readonly SliderImages $sliderImages
     ) {
     }
 
-    /**
-     * @param array<string, mixed>|null $attributes
-     */
-    public function aroundCreate(
+    public function afterCreate(
         ImageFactory $subject,
-        callable $proceed,
+        ImageBlock $imageBlock,
         Product $product,
-        string $imageId,
-        ?array $attributes = null
+        string $imageId
     ): ImageBlock {
-        /** @var ImageBlock $imageBlock */
-        $imageBlock = $proceed($product, $imageId, $attributes);
-
-        if (!$this->helper->isModuleEnabled()) {
+        $storeId = (int)$product->getStoreId();
+        if (!$this->config->isEnabled($storeId)) {
             return $imageBlock;
         }
 
@@ -56,7 +50,7 @@ class ImageTemplateSwitcher
             return $imageBlock;
         }
 
-        if ($this->helper->isSlider()) {
+        if ($this->config->isSliderEnabled($storeId)) {
             return $this->applySliderTemplate($imageBlock, $product, $imageId);
         }
 

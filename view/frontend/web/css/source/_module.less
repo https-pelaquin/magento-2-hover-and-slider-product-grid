@@ -1,30 +1,15 @@
 // Copyright © Bruno Pelaquin. All rights reserved.
 // https://github.com/https-pelaquin
 // https://www.linkedin.com/in/bruno-pelaquin/
-//
-// Magento UI Media Queries - Breakpoints
-//
-// @screen__xxs: 320px;
-// @screen__x-s: 370px;
-// @screen__xs:  480px;
-// @screen__s:   640px;
-// @screen__m:   768px;
-// @screen__l:   1024px;
-// @screen__xl:  1440px;
-//  _____________________________________________
 
-
-//
-// Mobile and Desktop (style-m.css) - common
-//
-// Is placed in style-m.css as both desktop and mobile devices
-// have rules within this block "in common"
-//  ---------------------------------------------
-
-& when (@media-common =true) {
+& when (@media-common = true) {
     .products-grid {
         .product-item {
-            .product-image-wrapper.bp-product-hover-image {
+            .product-item-info {
+                position: relative;
+            }
+
+            .bp-product-hover-image {
                 position: relative;
 
                 .product-image-photo {
@@ -41,50 +26,67 @@
                 }
             }
 
-            &:hover {
-                .product-image-wrapper.bp-product-hover-image {
-                    .bp-product-image-primary {
-                        opacity: 0;
-                    }
-
-                    .bp-product-image-hover {
-                        opacity: 1;
-                    }
+            .bp-product-slider-image {
+                .product-image-photo {
+                    display: block;
+                    position: relative;
+                    width: 100%;
                 }
 
-                .product-image-wrapper.bp-product-slider-image.slick-slider {
-                    .slick-arrow {
-                        display: block !important;
+                &:not(.slick-initialized) {
+                    .product-image-photo:not(:first-child) {
+                        display: none;
                     }
                 }
             }
 
-            .product-image-wrapper.bp-product-slider-image {
-                &:not(.slick-initialized) {
-                    .product-image-photo:not(:first-child) {
-                        display: none !important;
-                    }
+            .bp-product-slider-controls {
+                display: flex;
+                justify-content: space-between;
+                margin-top: -32px;
+                min-height: 32px;
+                position: relative;
+                z-index: 2;
+                top: -140px;
+
+                .slick-arrow {
+                    background: transparent;
+                    border: 0;
+                    height: 32px;
+                    width: 32px;
+                }
+            }
+        }
+    }
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .products-grid {
+        .product-item:hover {
+            .bp-product-hover-image {
+                .bp-product-image-primary {
+                    opacity: 0;
                 }
 
+                .bp-product-image-hover {
+                    opacity: 1;
+                }
+            }
+        }
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .products-grid {
+        .product-item {
+            .bp-product-hover-image {
                 .product-image-photo {
-                    display: block !important;
-                    position: relative;
-                    width: 100% !important;
+                    transition: none;
                 }
+            }
 
-                &.slick-slider {
-                    .slick-arrow {
-                        display: none !important;
-                        z-index: 2;
-                    }
-
-                    .slick-prev,
-                    .slick-next {
-                        background: none !important;
-                        height: 32px;
-                        width: 24px;
-                    }
-                }
+            .slick-track {
+                transition: none;
             }
         }
     }

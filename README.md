@@ -1,93 +1,84 @@
-<!--
-/**
- * Copyright © Bruno Pelaquin. All rights reserved.
- *
- * https://github.com/https-pelaquin
- * https://www.linkedin.com/in/bruno-pelaquin/
- */
--->
+# Pelaquin Hover Image Product Grids
 
-# Pelaquin_HoverImageProductGrids
+[![Magento 2.4.9](https://img.shields.io/badge/Magento-2.4.9-ee672f)](https://experienceleague.adobe.com/docs/commerce-operations/installation-guide/system-requirements.html)
+[![PHP 8.3-8.5](https://img.shields.io/badge/PHP-8.3--8.5-777bb4)](https://www.php.net/)
+[![MIT License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
-Adds an alternate product-image experience to native Magento product grids. The module can show a second image on hover or render a per-product image slider.
+An accessible Magento 2 module that enriches native product grids with either a hover image or a lazy-loaded product image slider. It preserves Magento's native product links and only changes known grid image contexts.
 
 ## Features
 
 - Two exclusive display modes: hover image or product image slider.
-- Store-view scoped configuration and product image selections.
-- Product gallery controls for selecting multiple slider images.
-- Slider order follows the product media gallery order.
-- Main product image is always rendered as the first slider slide.
+- Store View scoped configuration and product image selections.
+- Native product gallery controls for selecting slider images.
+- Server-side validation and normalization of selected gallery files.
+- Slider images loaded on demand after the primary image.
+- Keyboard-accessible controls outside the product link.
+- Reduced-motion support and touch-friendly slider behavior.
 - Support for category, widget, related, upsell, and cross-sell product grids.
-- Native Magento RequireJS initialization and PageBuilder Slick dependency.
-- `pt_BR` translations for the configuration and gallery controls.
+- Brazilian Portuguese translations.
 
-## Requirements
+## Compatibility
 
-- Magento Open Source 2.4.9.
-- Magento PageBuilder, which provides the Slick JavaScript dependency used by the slider.
-- Product images managed through the native Magento product media gallery.
+| Component | Supported version |
+| --- | --- |
+| Magento Open Source / Adobe Commerce | Magento 2.4.9 component series |
+| PHP | 8.3, 8.4, 8.5 |
+| JavaScript dependency | Magento Page Builder Slick alias |
 
-## Installation and Update
+The module is disabled by default. Validate other Magento and PHP combinations before advertising them as supported.
 
-From the Magento project root, enable the module if necessary and run the Magento setup commands:
+## Installation
+
+### Composer
+
+After publishing the package to a Composer repository:
 
 ```bash
+composer require pelaquin/module-hover-image-product-grids
 bin/magento module:enable Pelaquin_HoverImageProductGrids
 bin/magento setup:upgrade
-bin/magento setup:di:compile
-bin/magento setup:static-content:deploy -f pt_BR
 bin/magento cache:flush
 ```
 
-`setup:upgrade` creates the product attributes used by the module:
+### `app/code`
 
-- `hover_catalog`: the Store View scoped media image used by hover mode.
-- `slider_images`: the Store View scoped list of images selected for slider mode.
+Copy the module to `app/code/Pelaquin/HoverImageProductGrids`, then run the Magento commands above. In production mode, also compile DI and deploy static content for the required locales.
 
-## Store Configuration
+## Configuration
 
 Open **Stores > Configuration > Pelaquin > Hover Image Product Grids > General**.
 
 | Setting | Description |
 | --- | --- |
-| **Enable Hover Image Product Grids Module** | Enables or disables the module for the selected configuration scope. |
-| **Use Slider Instead of Hover** | Switches the grid behavior from hover mode to slider mode. |
+| Enable Hover Image Product Grids Module | Enables the module for the selected scope. |
+| Use Slider Instead of Hover | Uses selected gallery images in a slider instead of the Hover image role. |
 
-Both settings support Default Config, Website, and Store View scopes. Slider image selections also support Store View inheritance through Magento's **Use Default Value** control.
+Both settings support Default Config, Website, and Store View scopes. The selected slider images are also Store View scoped and can inherit their parent value through Magento's **Use Default Value** control.
 
-## Hover Mode
+## Hover mode
 
-1. Set **Use Slider Instead of Hover** to **No**.
+1. Enable the module and keep **Use Slider Instead of Hover** disabled.
 2. Edit a product and open **Images and Videos**.
-3. Assign one gallery image to the **Hover** image role.
-4. Save the product.
+3. Assign a gallery image to the **Hover Image** role.
+4. Save the product and flush cache when necessary.
 
-On supported product grids, the primary image fades into the image assigned to the `hover_catalog` attribute when the product card is hovered.
+The primary image fades to the selected image only on devices that support hover. Products without a Hover Image keep Magento's default output.
 
-If a product has no Hover image assigned, Magento renders its standard product image without a hover effect.
+## Slider mode
 
-## Slider Mode
-
-1. Set **Use Slider Instead of Hover** to **Yes**.
+1. Enable the module and set **Use Slider Instead of Hover** to **Yes**.
 2. Edit a product and open **Images and Videos**.
-3. Open an image from the media gallery.
-4. Enable **Use in Product Grid Slider**.
-5. Repeat for every additional image that should appear in the slider, then save the product.
+3. Open each gallery image that should be used.
+4. Enable **Use in Product Grid Slider** and save the product.
 
-The primary product image is always the first slide. The selected images are appended after it in the same order as the product media gallery. Duplicate images are ignored.
+The primary image is always the first slide. Selected images follow the product gallery order, duplicates are removed, and only images that belong to the product gallery are persisted. At least one selected image different from the primary image is required before a slider is rendered.
 
-At least one selected image different from the main product image is required. Otherwise, Magento keeps its standard product image output and does not initialize a slider for that card.
+Slider arrows are rendered outside the product-image link, so customers can still open the product by clicking or focusing the image. Swipe remains available on touch devices.
 
-### Slider Interaction
+## Supported grid locations
 
-Slider arrows are displayed while the product card is hovered on desktop devices. Touch devices can use swipe interaction.
-
-The product-image link is disabled for cards with an active slider. This prevents clicks on the slider controls or slides from redirecting to the product page. Customers can still open the product through the product name, price area, or any other product link provided by the theme.
-
-## Supported Product Grid Locations
-
-The module only changes the following native Magento product image identifiers:
+The module changes only these native Magento image IDs:
 
 - Category product grid.
 - Related products.
@@ -95,50 +86,55 @@ The module only changes the following native Magento product image identifiers:
 - Cart cross-sell products.
 - New Products and Catalog Product List widgets.
 
-It does not alter product detail page galleries, product list-mode images, cart item images, checkout images, wishlist images, comparison images, or other image contexts outside these product grids.
+It does not alter PDP galleries, list-mode images, cart and checkout item images, wishlist, comparison, or other image contexts.
 
-## Store View Behavior
+## Performance and accessibility
 
-The hover image and slider selection are product attributes with Store View scope.
-
-- Configure a different Hover image or slider selection in each Store View when needed.
-- In a non-default Store View, leave **Use Default Value** enabled to inherit the parent slider selection.
-- Disable **Use Default Value** before selecting a different set of slider images for that Store View.
+- The module uses already-loaded listing data and does not load products per card.
+- Secondary slider images use Slick's on-demand lazy loading.
+- Images keep native width, height, labels, and escaped attributes.
+- Hover transitions respect `prefers-reduced-motion`.
+- Slider controls have translated accessible labels and remain usable by keyboard.
 
 ## Troubleshooting
 
-### The hover image is not displayed
+### A hover image is not shown
 
-- Confirm that the module is enabled for the current Store View.
-- Confirm that **Use Slider Instead of Hover** is set to **No**.
-- Confirm that a product image has the **Hover** role assigned.
-- Flush Magento cache after changing configuration or product media.
+- Confirm the module is enabled for the current Store View.
+- Confirm slider mode is disabled.
+- Confirm a valid **Hover Image** role is assigned.
+- Flush Magento cache after changing configuration or media.
 
-### The slider is not displayed
+### A slider is not shown
 
-- Confirm that the module is enabled and slider mode is enabled for the current Store View.
-- Select at least one gallery image through **Use in Product Grid Slider**.
-- Confirm that the selected image is different from the main product image.
-- Save the product, flush cache, and redeploy static content when JavaScript or LESS changes are deployed.
+- Confirm the module and slider mode are enabled for the current Store View.
+- Select at least one additional gallery image.
+- Confirm the selected files are still present in the product gallery.
+- Save the product, flush cache, and deploy static assets after JavaScript or LESS changes.
 
-### Slider selections are missing in a Store View
+### Selections are missing in a Store View
 
-- Verify the selected Store View in the product editor.
+- Check the Store View selected in the product editor.
 - Check whether **Use Default Value** is intentionally enabled.
-- Save the product after changing the selection.
+- Save after changing image selections.
 
-## Technical Notes
+## Development
 
-- The frontend is initialized per product card with `data-mage-init`; no global slider script is used.
-- The slider uses Magento PageBuilder's `slick` RequireJS alias.
-- Selected slider files are serialized as JSON in `slider_images` and are loaded with product listing data.
-- The module uses a plugin on `Magento\Catalog\Block\Product\ImageFactory` and filters by product-grid image identifier, avoiding changes outside the supported locations.
+From this repository's Magento wrapper root:
 
-## Validation After Deployment
+```bash
+bin/phpcs app/code/Pelaquin/HoverImageProductGrids
+bin/cli vendor/bin/phpunit -c app/code/Pelaquin/HoverImageProductGrids/phpunit.xml.dist
+bin/analyse --level 6 app/code/Pelaquin/HoverImageProductGrids
+bin/magento setup:di:compile
+```
 
-After installing or updating the module, verify the following in the storefront for each relevant Store View:
+Static checks do not prove Admin or storefront behavior. After deployment, validate hover and slider modes in each supported grid, Store View inheritance, keyboard navigation, touch interaction, console health, and lazy-loaded image requests.
 
-1. A product with a Hover image changes image in hover mode.
-2. A product with selected slider images changes slides without navigating to the product page.
-3. A product without a configured Hover image or slider images keeps the default Magento image behavior.
-4. Category, related, upsell, cross-sell, and widget grids behave as expected in the active mode.
+## Security
+
+Slider selections are submitted by the Admin gallery UI, validated server-side, normalized as JSON, and constrained to the product media gallery. Templates escape URLs, labels, classes, and native attributes by context.
+
+## License
+
+Released under the [MIT License](LICENSE).

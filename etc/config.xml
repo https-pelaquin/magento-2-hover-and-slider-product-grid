@@ -11,7 +11,7 @@
     <default>
         <bp_hover_image_product_grids>
             <general>
-                <active>1</active>
+                <active>0</active>
                 <slider_option>0</slider_option>
             </general>
         </bp_hover_image_product_grids>

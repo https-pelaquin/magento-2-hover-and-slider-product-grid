@@ -8,6 +8,9 @@
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
     <system>
+        <tab id="pelaquin" translate="label" sortOrder="90">
+            <label>Pelaquin</label>
+        </tab>
         <section id="bp_hover_image_product_grids" translate="label" showInDefault="1" showInWebsite="1"
                  showInStore="1" sortOrder="90">
             <label>Hover Image Product Grids</label>
@@ -28,6 +31,9 @@
                     <label>Use Slider Instead of Hover</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>Use the product images selected for the grid slider instead of the hover image.</comment>
+                    <depends>
+                        <field id="active">1</field>
+                    </depends>
                 </field>
             </group>
         </section>

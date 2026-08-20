@@ -10,14 +10,14 @@ declare(strict_types=1);
 namespace Pelaquin\HoverImageProductGrids\Model;
 
 use InvalidArgumentException;
-use Magento\Framework\Serialize\SerializerInterface;
+use Magento\Framework\Serialize\Serializer\Json;
 
 class SliderImages
 {
     public const ATTRIBUTE_CODE = 'slider_images';
 
     public function __construct(
-        private readonly SerializerInterface $serializer
+        private readonly Json $serializer
     ) {
     }
 
@@ -36,13 +36,21 @@ class SliderImages
             return [];
         }
 
+        return is_array($images) ? $this->normalize($images) : [];
+    }
+
+    /**
+     * @return string[]
+     */
+    public function decodeStrict(string $value): array
+    {
+        $images = $this->serializer->unserialize($value);
+
         if (!is_array($images)) {
-            return [];
+            throw new InvalidArgumentException('The slider image selection must be an array.');
         }
 
-        $images = array_filter($images, static fn (mixed $image): bool => is_string($image) && $image !== '');
-
-        return array_values(array_unique($images));
+        return $this->normalize($images);
     }
 
     /**
@@ -50,6 +58,22 @@ class SliderImages
      */
     public function encode(array $images): string
     {
-        return $this->serializer->serialize(array_values(array_unique($images)));
+        return $this->serializer->serialize($this->normalize($images));
+    }
+
+    /**
+     * @param mixed[] $images
+     * @return string[]
+     */
+    public function normalize(array $images): array
+    {
+        $images = array_filter(
+            $images,
+            static fn (mixed $image): bool => is_string($image)
+                && $image !== ''
+                && $image !== 'no_selection'
+        );
+
+        return array_values(array_unique($images));
     }
 }
